@@ -432,11 +432,23 @@
     badge.textContent = map[type] || '● Hazır';
   }
 
-  function addScan(item){
-    const time = new Date().toLocaleTimeString('az-AZ');
-    scanHistory.unshift({...item, time});
-    if(scanHistory.length > 15) scanHistory.pop();
+  const SCAN_STORAGE_KEY = 'ghg_scan_history';
+
+  function saveScanHistory(){
+    try{ localStorage.setItem(SCAN_STORAGE_KEY, JSON.stringify(scanHistory)); }catch(e){}
+  }
+  function loadScanHistory(){
+    try{
+      const raw = localStorage.getItem(SCAN_STORAGE_KEY);
+      if(raw) scanHistory = JSON.parse(raw);
+    }catch(e){ scanHistory = []; }
+  }
+  function renderScanList(){
     const list = document.getElementById('scanList');
+    if(!scanHistory.length){
+      list.innerHTML = '<div class="empty-state">Hələ heç bir skan edilməyib</div>';
+      return;
+    }
     list.innerHTML = scanHistory.map(scan=>{
       let icon='✓', cls='ok';
       if(scan.err){ icon='✕'; cls='err'; }
@@ -450,6 +462,14 @@
         </div>
       </div>`;
     }).join('');
+  }
+
+  function addScan(item){
+    const time = new Date().toLocaleTimeString('az-AZ');
+    scanHistory.unshift({...item, time});
+    if(scanHistory.length > 15) scanHistory.pop();
+    saveScanHistory();
+    renderScanList();
   }
 
   function startCountdown(type){
@@ -689,7 +709,11 @@
     });
   }
 
-  window.onload = startCamera;
+  window.onload = () => {
+    loadScanHistory();
+    renderScanList();
+    startCamera();
+  };
   window.onbeforeunload = ()=>{
     try{ if(html5QrCode) html5QrCode.stop(); }catch(e){}
     if(countdownInterval) clearInterval(countdownInterval);
