@@ -208,7 +208,7 @@
 </div>
 
 <script>
-  const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyFrdIOu3Y1oR0ZkyfozUBq6NkOSjlUbV7YsrHD449Hd2raDn4SYakGWb6jio8EdeIe/exec';
+  const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyt1Gr_SUhAuaYoc-B5eE54Pq2sj22yugVSpMAuPRmPKVTvR2cg6QPrOw8cUw4Aq0F2/exec';
 
   const COUNTDOWN_SECONDS = 5;
 
